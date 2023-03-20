@@ -8,3 +8,35 @@
 .h-full{
     height: 100vh;
 }
+.w-0 {
+    width: 0px;
+}
+.w-18{
+    width: 18rem;
+}
+.ml-0{
+    margin-left: 0px;
+}
+.ml-18{
+    margin-left: 18rem;
+}
+.sticky {
+    position: fixed;
+    top: 0;
+    z-index: 2;
+}
+.d-none {
+    display: none;
+}
+.flex {
+    display: flex;
+}
+.relative {
+    position: relative;
+}
+.absolute {
+    position: absolute;
+}
+.fixed {
+    position: fixed;
+}
