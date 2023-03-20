@@ -9,7 +9,7 @@ const useAxios = () => {
   const [method, setMethod] = useState("GET");
   const [requestConfig, setRequestConfig] = useState({});
 
-  const fecthData = useCallback(async () => {
+  const fetchData = useCallback(async () => {
     try {
       setLoading(true);
       const res = await axios[method.toLowerCase()](url, {
@@ -31,7 +31,7 @@ const useAxios = () => {
       url,
       method,
       requestConfig,
-      fecthData,
+      fetchData,
       setResponse,
       setError,
       setLoading,
@@ -39,7 +39,7 @@ const useAxios = () => {
       setMethod,
       setRequestConfig,
     };
-  }, [response, error, loading, url, method, requestConfig, fecthData]);
+  }, [response, error, loading, url, method, requestConfig, fetchData]);
 
   return value;
 };

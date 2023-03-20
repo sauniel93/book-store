@@ -2,3 +2,9 @@
     margin: 0;
     padding: 0;
 }
+.w-full {
+    width: 100%;
+}
+.h-full{
+    height: 100vh;
+}
