@@ -1,4 +1,5 @@
 import React from "react";
+import SidebarButtonList from "./SidebarButtonList";
 import { useMenuContext } from "../contexts/MenuContext";
 
 const Sidebar = () => {
@@ -6,18 +7,12 @@ const Sidebar = () => {
   return (
     <>
       <div className="flex absolute">
-      {activeMenu ? (
         <div
-          className="fixed w-18"
+          className={`fixed ${activeMenu ? "w-18" : "w-0 d-none"}`}
           style={{ backgroundColor: "white", height: "90vh", zIndex: "5" }}
         >
-          Sidebar
+          <SidebarButtonList />
         </div>
-      ) : (
-        <div className="fixed w-0 d-none">
-          Sidebar
-        </div>
-      )}
       </div>
     </>
   );
