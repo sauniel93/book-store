@@ -70,7 +70,11 @@ export default function TopNavbar() {
     handleResize();
 
     return () => window.removeEventListener("resize", handleResize);
-  }, [screenWidth]);
+  }, [screenWidth, setScreenWidth]);
+
+  useEffect(() => {
+    screenWidth <= 900 ? setActiveMenu(false) : setActiveMenu(true);
+  }, [screenWidth, setActiveMenu]);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
