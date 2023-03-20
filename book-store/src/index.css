@@ -40,3 +40,6 @@
 .fixed {
     position: fixed;
 }
+.computeWidthMargin {
+    width: calc(100% - 18rem);
+}
