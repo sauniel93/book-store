@@ -3,7 +3,7 @@ import React, { createContext, useContext, useState, useMemo } from "react";
 const MenuContext = createContext();
 
 export const ContextProvider = ({ children }) => {
-  const [activeMenu, setActiveMenu] = useState(true);
+  const [activeMenu, setActiveMenu] = useState(false);
   const [screenWidth, setScreenWidth] = useState(undefined);
 
   const value = useMemo(() => {
