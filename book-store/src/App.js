@@ -1,5 +1,6 @@
 import Content from "./components/Content";
 import TopNavbar from "./components/TopNavbar";
+import Sidebar from "./components/Sidebar";
 import "./index.css";
 
 function App() {
@@ -15,7 +16,15 @@ function App() {
         <div className="w-full" style={{ height: "auto", marginBottom: "2px" }}>
           <TopNavbar />
         </div>
-        <Content />
+        <div
+            className="w-full relative"
+            style={{ overflow: "scroll", height: "90vh" }}
+          >
+            <Sidebar />
+            <div style={{ margin: "auto" }}>
+              <Content />
+            </div>
+          </div>
       </div>
     </div>
   );
