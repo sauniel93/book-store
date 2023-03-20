@@ -15,9 +15,9 @@ function Content() {
   };
 
   const computeWidth = () => {
-    if (screenWidth < 900) setWidth("w-full");
-    if (activeMenu && screenWidth > 900) setWidth("computeWidthMargin");
-    if (!activeMenu && screenWidth > 900) setWidth("w-full");
+    (screenWidth <= 900) || (!activeMenu && screenWidth > 900)
+      ? setWidth("w-full")
+      : setWidth("computeWidthMargin");
   };
 
   useEffect(() => {
@@ -37,7 +37,7 @@ function Content() {
         zIndex: "0",
         boxSizing: "border-box",
         overflow: "scroll",
-        height: "90vh"
+        height: "90vh",
       }}
       onClick={() => handleClick()}
     >
