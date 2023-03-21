@@ -16,6 +16,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { visuallyHidden } from "@mui/utils";
 import Stack from "@mui/material/Stack";
 import EditIcon from "@mui/icons-material/Edit";
+import { useNavigate } from "react-router-dom";
 
 import useAxios from "../hooks/useAxios";
 import Loading from "./Loading";
@@ -130,12 +131,14 @@ export default function Booktable() {
   const [dense] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [rows, setRows] = useState([]);
-  const { books, id, setBooks, setId } = useBookContext();
+  const { books, id, setBooks, setId, setState } = useBookContext();
   const { accept, setAccept, setOpen } = useConfirmDialogContext();
   const { loading, url, fetchData, setUrl, setMethod } = useAxios();
+  const navigate = useNavigate();
 
   useEffect(() => {
     setUrl(BaseUrl);
+    setId(0);
   }, [setUrl]);
 
   useEffect(() => {
@@ -158,6 +161,12 @@ export default function Booktable() {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
+  };
+
+  const handleUpdate = (row) => {
+    setId(row.id);
+    setState("Update");
+    navigate("/add");
   };
 
   const handleOpenDialog = async (id) => {
@@ -249,7 +258,10 @@ export default function Booktable() {
                               </IconButton>
                             </Tooltip>
                             <Tooltip title="Update">
-                              <IconButton aria-label="update">
+                              <IconButton
+                                aria-label="update"
+                                onClick={() => handleUpdate(row)}
+                              >
                                 <EditIcon />
                               </IconButton>
                             </Tooltip>

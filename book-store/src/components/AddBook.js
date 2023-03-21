@@ -33,7 +33,7 @@ export default function AddBook() {
     setMethod,
     setUrl,
   } = useAxios();
-  const { id, setId, state, setState } = useBookContext();
+  const { books, id, setId, state, setState } = useBookContext();
 
   useEffect(() => {
     setLoading(false);
@@ -45,7 +45,20 @@ export default function AddBook() {
       setMethod("POST");
       setUrl(BaseUrl);
     }
-  }, [state, setMethod, setUrl]);
+    if (state === "Update") {
+      setMethod("PUT");
+      setUrl(`${BaseUrl}/${id}`);
+    }
+  }, [id, state, setMethod, setUrl]);
+
+  useEffect(() => {
+    if (id !== 0 && state === "Update"){
+      const book = books.find(book=>book.id === id)
+      setName(book?.title);
+      setAutorEmail(book?.autorEmail);
+      setPages(book?.pages);
+    }
+  }, [id, state, books])
 
   const isEmail = (email) =>
     /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email);
@@ -87,7 +100,6 @@ export default function AddBook() {
       setMessage(error.message);
     } finally {
       cleanUpForm();
-      setId(0);
     }
   };
 
