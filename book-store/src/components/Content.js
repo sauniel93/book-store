@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Routes, Route } from "react-router-dom";
 import Booktable from "./Booktable";
 import AddBook from "./AddBook";
@@ -14,15 +14,15 @@ function Content() {
     }
   };
 
-  const computeWidth = () => {
+  const computeWidth = useCallback(() => {
     (screenWidth <= 900) || (!activeMenu && screenWidth > 900)
       ? setWidth("w-full")
       : setWidth("computeWidthMargin");
-  };
+  },[screenWidth, activeMenu]);
 
   useEffect(() => {
     computeWidth();
-  }, [screenWidth, activeMenu]);
+  }, [screenWidth, activeMenu, computeWidth]);
 
   return (
     <div
