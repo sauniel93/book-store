@@ -1,7 +1,9 @@
 import { useState, useCallback, useMemo } from "react";
 import axios from "axios";
+import { useBookContext } from "../contexts/BookContext";
 
 const useAxios = () => {
+  const { setBooks } = useBookContext();
   const [response, setResponse] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
@@ -16,12 +18,13 @@ const useAxios = () => {
         ...requestConfig,
       });
       setResponse(res.data);
+      if (method.toLowerCase() === "get") setBooks(res.data)
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
-  }, [method, url, requestConfig]);
+  }, [method, url, requestConfig, setBooks]);
 
   const value = useMemo(() => {
     return {
