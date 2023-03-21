@@ -1,19 +1,25 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import { useConfirmDialogContext } from '../contexts/ConfirmDialogContext';
+import { useBookContext } from '../contexts/BookContext';
 
 export default function ConfirmDialog() {
-    const [open, setOpen] = useState(false);
+  const { setId } = useBookContext();
+  const {open, setOpen, setAccept} = useConfirmDialogContext()
 
   const handleClose = () => {
+    setAccept(false);
     setOpen(false);
+    setId(0)
   };
-  
+
   const handleAgree = () => {
+    setAccept(true);
     setOpen(false);
   }
 
