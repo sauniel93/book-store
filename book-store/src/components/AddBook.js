@@ -10,7 +10,8 @@ import Button from "@mui/material/Button";
 import { CardHeader } from "@mui/material";
 
 import useAxios from "../hooks/useAxios";
-import {useBookContext} from "../contexts/BookContext";
+import { useBookContext } from "../contexts/BookContext";
+import Message from "./Message";
 import Loading from "./Loading";
 import { BaseUrl } from "../config/urls";
 
@@ -19,41 +20,55 @@ export default function AddBook() {
   const [autorEmail, setAutorEmail] = useState("");
   const [pages, setPages] = useState(0);
   const [message, setMessage] = useState({});
-  const [disabled, setDisabled] = useState(true)
-  const nameRef = useRef(null)
-  const emailRef = useRef(null)
-  const { error, loading, setLoading, fetchData, setRequestConfig, setMethod, setUrl } = useAxios();
+  const [disabled, setDisabled] = useState(true);
+  const nameRef = useRef(null);
+  const emailRef = useRef(null);
+  const {
+    error,
+    loading,
+    response,
+    setLoading,
+    fetchData,
+    setRequestConfig,
+    setMethod,
+    setUrl,
+  } = useAxios();
   const { id, setId, state, setState } = useBookContext();
 
   useEffect(() => {
-    setLoading(false)
-    if (id === 0)
-    setState("Add");
-  }, [id, setLoading, setState])
+    setLoading(false);
+    if (id === 0) setState("Add");
+  }, [id, setLoading, setState]);
 
   useEffect(() => {
     if (state === "Add") {
       setMethod("POST");
       setUrl(BaseUrl);
-    } 
-  }, [state, setMethod, setUrl])
-  
+    }
+  }, [state, setMethod, setUrl]);
+
   const isEmail = (email) =>
     /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email);
 
   const validateEmail = (e) => {
     if (e.target.value.trim() && !isEmail(e.target.value.trim())) {
-      emailRef?.current?.querySelector('input')?.focus()
+      setMessage({
+        message: "Invalid email",
+        severity: "error",
+        duration: 2000,
+        reset: new Date(),
+      });
+      emailRef?.current?.querySelector("input")?.focus();
     }
   };
 
-  const cleanUpForm = () => {
+  const cleanUpForm = useCallback(() => {
     setName("");
     setAutorEmail("");
     setPages(0);
-    setId(0)
-    nameRef?.current?.querySelector('input')?.focus()
-  };
+    setId(0);
+    nameRef?.current?.querySelector("input")?.focus();
+  }, [setId]);
 
   const updateRequestConfig = useCallback(() => {
     setRequestConfig({
@@ -63,31 +78,69 @@ export default function AddBook() {
         pages,
       },
     });
-  }, [name, autorEmail, pages, setRequestConfig])
+  }, [name, autorEmail, pages, setRequestConfig]);
 
   const handleSubmit = () => {
     try {
       fetchData();
     } catch (error) {
-      setMessage(error.message)
+      setMessage(error.message);
     } finally {
-      cleanUpForm()
+      cleanUpForm();
       setId(0);
     }
   };
 
   useEffect(() => {
-    updateRequestConfig();
-    if (autorEmail && isEmail(autorEmail?.trim()) && name?.trim().length && pages){
-      setDisabled(false)
-    } else {
-      setDisabled(true)
+    try {
+      if (error) {
+        setMessage({
+          message: error,
+          severity: "error",
+          duration: 2000,
+          reset: new Date(),
+        });
+      }
+      if (response.id) {
+        setMessage({
+          message: `Book ${state === "Add" ? "added" : "updated"} correctly!!!`,
+          severity: `${state === "Add" ? "success" : "info"}`,
+          duration: 2000,
+          reset: new Date(),
+        });
+        cleanUpForm();
+      }
+    } catch (error) {
+      setMessage(error.message);
     }
-  }, [name, autorEmail, pages, updateRequestConfig])
+  }, [response, error, state, cleanUpForm]);
+
+  useEffect(() => {
+    updateRequestConfig();
+    if (
+      autorEmail &&
+      isEmail(autorEmail?.trim()) &&
+      name?.trim().length &&
+      pages
+    ) {
+      setDisabled(false);
+    } else {
+      setDisabled(true);
+    }
+  }, [name, autorEmail, pages, updateRequestConfig]);
 
   return (
-    <> 
-      <Card sx={{ minWidth: 360 }} style={{maxWidth: "600px", margin: "auto" }}>
+    <>
+      {message && (
+        <Message
+          {...message}
+          style={{ minWidth: "360px", maxWidth: "600px", margin: "auto" }}
+        />
+      )}
+      <Card
+        sx={{ minWidth: 360 }}
+        style={{ maxWidth: "600px", margin: "auto" }}
+      >
         <CardHeader title={`${state} Book`} style={{ textAlign: "center" }} />
         <CardContent>
           <Box
@@ -135,8 +188,12 @@ export default function AddBook() {
           </Box>
         </CardContent>
         <CardActions style={{ justifyContent: "space-around" }}>
-          <Button size="small" onClick={() => handleSubmit()} disabled={disabled}>
-          {state}
+          <Button
+            size="small"
+            onClick={() => handleSubmit()}
+            disabled={disabled}
+          >
+            {state}
           </Button>
           <Button
             size="small"
