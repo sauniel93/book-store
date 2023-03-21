@@ -52,13 +52,13 @@ export default function AddBook() {
   }, [id, state, setMethod, setUrl]);
 
   useEffect(() => {
-    if (id !== 0 && state === "Update"){
-      const book = books.find(book=>book.id === id)
+    if (id !== 0 && state === "Update") {
+      const book = books.find((book) => book.id === id);
       setName(book?.title);
       setAutorEmail(book?.autorEmail);
       setPages(book?.pages);
     }
-  }, [id, state, books])
+  }, [id, state, books]);
 
   const isEmail = (email) =>
     /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email);
@@ -98,8 +98,6 @@ export default function AddBook() {
       fetchData();
     } catch (error) {
       setMessage(error.message);
-    } finally {
-      cleanUpForm();
     }
   };
 
@@ -120,12 +118,11 @@ export default function AddBook() {
           duration: 2000,
           reset: new Date(),
         });
-        cleanUpForm();
       }
     } catch (error) {
       setMessage(error.message);
     }
-  }, [response, error, state, cleanUpForm]);
+  }, [response, error, cleanUpForm]);
 
   useEffect(() => {
     updateRequestConfig();
@@ -140,6 +137,10 @@ export default function AddBook() {
       setDisabled(true);
     }
   }, [name, autorEmail, pages, updateRequestConfig]);
+
+  useEffect(() => {
+    if (message?.message) cleanUpForm();
+  }, [message])
 
   return (
     <>
