@@ -15,6 +15,7 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
+import { NavLink } from "react-router-dom";
 import { useMenuContext } from "../contexts/MenuContext";
 import { useNavigate } from "react-router-dom";
 import { BaseUrl } from "../config/urls";
@@ -209,7 +210,9 @@ export default function TopNavbar() {
             sx={{ display: { xs: "none", sm: "block" } }}
             style={{ cursor: "pointer" }}
           >
-            Books Store
+            <NavLink to={"/"} style={{ textDecoration: "none", color: "#fff" }}>
+              Books Store
+            </NavLink>
           </Typography>
           <Search>
             <SearchIconWrapper>
