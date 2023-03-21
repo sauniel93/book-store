@@ -1,5 +1,4 @@
-import * as React from "react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -17,6 +16,9 @@ import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import { useMenuContext } from "../contexts/MenuContext";
+import { useNavigate } from "react-router-dom";
+import { BaseUrl } from "../config/urls";
+import useAxios from "../hooks/useAxios";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -60,6 +62,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function TopNavbar() {
   const { screenWidth, setActiveMenu, setScreenWidth } = useMenuContext();
   const [inputValue, setInputValue] = useState("");
+  const navigate = useNavigate();
+  const { url, fetchData, setUrl } = useAxios();
 
   useEffect(() => {
     const handleResize = () => {
@@ -76,8 +80,19 @@ export default function TopNavbar() {
     screenWidth <= 900 ? setActiveMenu(false) : setActiveMenu(true);
   }, [screenWidth, setActiveMenu]);
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  useEffect(() => {
+    if (inputValue.trim()) fetchData();
+  }, [url]);
+
+  const handleBlur = (e) => {
+    if (inputValue.trim()) {
+      setUrl(`${BaseUrl}?title=${e.target.value}`);
+      navigate("/");
+    }
+  };
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -205,6 +220,7 @@ export default function TopNavbar() {
               inputProps={{ "aria-label": "search" }}
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
+              onBlur={(e) => handleBlur(e)}
             />
           </Search>
           <Box sx={{ flexGrow: 1 }} />
