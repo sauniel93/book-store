@@ -18,6 +18,7 @@ import Stack from "@mui/material/Stack";
 import EditIcon from "@mui/icons-material/Edit";
 
 import useAxios from "../hooks/useAxios";
+import Loading from "./Loading";
 import { useBookContext } from "../contexts/BookContext";
 import { BaseUrl } from "../config/urls";
 
@@ -128,7 +129,7 @@ export default function Booktable() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [rows, setRows] = useState([]);
   const { books } = useBookContext();
-  const { url, fetchData, setUrl } = useAxios();
+  const { loading, url, fetchData, setUrl } = useAxios();
 
   useEffect(() => {
     setUrl(BaseUrl);
@@ -258,6 +259,7 @@ export default function Booktable() {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
+      {loading && <Loading />}
     </Box>
   );
 }
