@@ -1,4 +1,4 @@
-import React,{ useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
@@ -20,6 +20,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import useAxios from "../hooks/useAxios";
 import Loading from "./Loading";
 import { useBookContext } from "../contexts/BookContext";
+import ConfirmDialog from "./ConfirmDialog";
+import { useConfirmDialogContext } from "../contexts/ConfirmDialogContext";
 import { BaseUrl } from "../config/urls";
 
 function descendingComparator(a, b, orderBy) {
@@ -128,8 +130,9 @@ export default function Booktable() {
   const [dense] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [rows, setRows] = useState([]);
-  const { books } = useBookContext();
-  const { loading, url, fetchData, setUrl } = useAxios();
+  const { books, id, setBooks, setId } = useBookContext();
+  const { accept, setAccept, setOpen } = useConfirmDialogContext();
+  const { loading, url, fetchData, setUrl, setMethod } = useAxios();
 
   useEffect(() => {
     setUrl(BaseUrl);
@@ -137,7 +140,15 @@ export default function Booktable() {
 
   useEffect(() => {
     if (url !== "") fetchData();
-  }, [url, fetchData]);
+    if (accept === true)
+      // Too reflect changes
+      setBooks(
+        books.filter((book) => {
+          return book.id !== id;
+        })
+      );
+    setAccept(false);
+  }, [url]);
 
   useEffect(() => {
     setRows(books);
@@ -148,6 +159,18 @@ export default function Booktable() {
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
+
+  const handleOpenDialog = async (id) => {
+    setId(id);
+    setOpen(true);
+  };
+
+  useEffect(() => {
+    if (accept === true && id !== 0) {
+      setUrl(`${BaseUrl}/${id}`);
+      setMethod("DELETE");
+    }
+  }, [accept, id, setUrl, setMethod]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -220,14 +243,13 @@ export default function Booktable() {
                             <Tooltip title="Delete">
                               <IconButton
                                 aria-label="delete"
+                                onClick={() => handleOpenDialog(row.id)}
                               >
                                 <DeleteIcon />
                               </IconButton>
                             </Tooltip>
                             <Tooltip title="Update">
-                              <IconButton
-                                aria-label="update"
-                              >
+                              <IconButton aria-label="update">
                                 <EditIcon />
                               </IconButton>
                             </Tooltip>
@@ -260,6 +282,7 @@ export default function Booktable() {
         />
       </Paper>
       {loading && <Loading />}
+      <ConfirmDialog />
     </Box>
   );
 }
