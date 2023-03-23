@@ -20,7 +20,8 @@ function SidebarButton({ id, url, title }) {
 
 export default function SidebarButtonList() {
   const menus = [
-    { id: "one", url: "/", title: "List Books" },
+    { id: "cero", url: "/home", title: "Home" },
+    { id: "one", url: "/list", title: "List Books" },
     { id: "two", url: "/add", title: "Add Book" },
   ];
   return (
