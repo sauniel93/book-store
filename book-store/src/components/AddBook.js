@@ -22,7 +22,6 @@ export default function AddBook() {
   const [message, setMessage] = useState({});
   const [disabled, setDisabled] = useState(true);
   const nameRef = useRef(null);
-  const emailRef = useRef(null);
   const {
     error,
     loading,
@@ -64,15 +63,13 @@ export default function AddBook() {
     /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email);
 
   const validateEmail = (e) => {
-    if (e.target.value.trim() && !isEmail(e.target.value.trim())) {
+    if (e.target.value.trim() && !isEmail(e.target.value.trim()))
       setMessage({
         message: "Invalid email",
         severity: "error",
         duration: 2000,
         reset: new Date(),
       });
-      emailRef?.current?.querySelector("input")?.focus();
-    }
   };
 
   const cleanUpForm = useCallback(() => {
@@ -139,8 +136,8 @@ export default function AddBook() {
   }, [name, autorEmail, pages, updateRequestConfig]);
 
   useEffect(() => {
-    if (message?.message) cleanUpForm();
-  }, [message])
+    if (message?.message && message?.severity !== "error") cleanUpForm();
+  }, [message]);
 
   return (
     <>
@@ -186,7 +183,6 @@ export default function AddBook() {
                 value={autorEmail}
                 onChange={(e) => setAutorEmail(e.target.value)}
                 onBlur={(e) => validateEmail(e)}
-                ref={emailRef}
               />
             </FormControl>
             <FormControl variant="filled">
